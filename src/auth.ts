@@ -20,9 +20,7 @@ export class User {
 }
 
 let anonymousUser = new User("default", "", Permission.None);
-export const users: [User] = [
-    new User("test", "123", Permission.ReadWrite),
-]
+export const users: User[] = []
 
 export function auth(request: Request): User {
     const header = request.headers.get("Authorization");

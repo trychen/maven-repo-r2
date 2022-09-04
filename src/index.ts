@@ -8,7 +8,7 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-import { auth } from "./auth";
+import { auth, Permission, User, users } from "./auth";
 import { deleteFile, findFile, getFile, uploadFile } from "./repo";
 
 export interface Env {
@@ -20,6 +20,9 @@ export interface Env {
 	
 	// Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
 	MY_BUCKET: R2Bucket;
+
+	USERNAME: string;
+	PASSWORD: string;
 }
 
 function getPath(request: Request): string {
@@ -34,13 +37,15 @@ export default {
 		env: Env,
 		ctx: ExecutionContext
 	): Promise<Response> {
+		users.push(new User(env.USERNAME, env.PASSWORD, Permission.ReadWrite));
+
 		let user = auth(request);
 		
 		let path = getPath(request);
 
-		// if(path.length == 0) {
-		// 	return new Response("path is empty", { status: 404 });
-		// }
+		if(path.length == 0) {
+			return new Response("path is empty", { status: 404 });
+		}
 
 		switch(request.method) {
 			case "HEAD":
