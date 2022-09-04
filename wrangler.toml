@@ -1,0 +1,7 @@
+name = "maven-repo-r2-public"
+main = "src/index.ts"
+compatibility_date = "2022-09-03"
+
+[[r2_buckets]]
+binding = 'MY_BUCKET' # <~ valid JavaScript variable name
+bucket_name = 'maven-repo-public'
